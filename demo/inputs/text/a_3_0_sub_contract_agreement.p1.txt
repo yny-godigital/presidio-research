@@ -1,0 +1,59 @@
+Proposed Development of Sg. Rasau Water Supply Scheme (Stage 1), Selangor Darul Ehsan
+RWSS/S1/SCA
+Package 1 – Design and Build of Proposed Rasau Intake, Raw Water Pumping Mains,
+Water Treatment Plant and Associated Works
+[SCADA and Instrumentation System for Sg. Rasau Project] [Order No.] SCA1
+SUB-CONTRACT ARTICLES OF AGREEMENT
+THIS AGREEMENT is made and entered into the ___ of ____ 20___
+BETWEEN
+GAMUDA M&E SDN BHD (Company Registration No. 1102650-A) (the "Contractor”) who
+registered address is at Menara Gamuda, D-16-01, Block D, PJ Trade Centre, No.8, Jalan PJU
+8/8A, Bandar Damansara Perdana, 47820 Petaling Jaya, Selangor;
+AND
+________________________________________________________,
+a
+company
+duly
+incorporated
+under
+the
+laws
+of
+Malaysia
+and
+whose
+office
+is
+situated
+at
+_________________________________________ (the "Sub-Contractor") of the other part.
+(Reference to the “Parties” shall mean the Contractor and the Sub-Contractor jointly and
+reference to “Party” shall mean either the Contractor or the Sub-Contractor, as applicable.)
+RECITALS:
+A.
+PENGURUSAN AIR SELANGOR SDN BHD (the “Employer”) is the owners of the
+“Proposed Development of Sg. Rasau Water Supply Scheme (Stage 1) Selangor Darul
+Ehsan; Package 1 – Design and Build of Proposed Rasau Intake, Raw Water Pumping
+Mains, Water Treatment Plant and Associated Works.”
+B.
+GAMUDA BERHAD has entered into a contract with the Employer for the Construction
+& Completion of the “Proposed Development of Sg. Rasau Water Supply Scheme
+(Stage 1) Selangor Darul Ehsan; Package 1 – Design and Build of Proposed Rasau
+Intake, Raw Water Pumping Mains, Water Treatment Plant and Associated Works.”
+(the “Head Contract”).
+C.
+GAMUDA ENGINEERING SDN BHD (the “Main Contractor”) has entered into a
+contract with Gamuda Berhad for the Construction & Completion of the “Proposed
+Development of Sg. Rasau Water Supply Scheme (Stage 1) Selangor Darul Ehsan;
+Package 1 – Design and Build of Proposed Rasau Intake, Raw Water Pumping Mains,
+Water Treatment Plant and Associated Works.” (the “Main Contract”).
+D.
+GAMUDA M&E SDN. BHD. (the “Contractor”) has entered into a contract with Main
+Contractor to execute the design (to the extent set out in its agreement) and
+construction of parts of the Main Contract’s works (the “Contract”). The Sub-Contract
+Works form part of the Contract Works.
+E.
+The Sub-Contractor has entered into a contract with Contractor to execute the design
+(to the extent set out in its agreement) and construction of Design Review, Supply,
+Delivery, Installation, Testing & Commissioning and Maintenance of SCADA and
+Instrumentation System for Sg. Rasau Project (the “Sub-Contract”).

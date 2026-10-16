@@ -1,0 +1,10 @@
+# .dockerignore (repo root)
+.git
+node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+presidio-service/tests
+demo
+eval
+docs
