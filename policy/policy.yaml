@@ -1,0 +1,21 @@
+# Entity → action. pseudonymize = reversible token; block = reject request;
+# redact = remove permanently (optional, value NOT recoverable).
+entities:
+  PERSON:
+    action: pseudonymize
+  EMAIL_ADDRESS:
+    action: pseudonymize
+  PHONE_NUMBER:
+    action: pseudonymize
+  ORGANIZATION:
+    action: pseudonymize
+  PROJECT_CODE:
+    action: pseudonymize
+  API_KEY:
+    action: block
+  PASSWORD:
+    action: block
+  SSM:
+    action: pseudonymize
+  NRIC:
+    action: pseudonymize

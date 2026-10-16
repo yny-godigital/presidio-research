@@ -1,0 +1,12 @@
+services:
+  presidio-analyzer:
+    build:
+      context: .
+      dockerfile: presidio-service/Dockerfile
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3000/health | grep -q up"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
