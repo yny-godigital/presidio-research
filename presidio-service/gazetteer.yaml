@@ -1,0 +1,33 @@
+# Phrase lists for the automaton gazetteer. Edits take effect on service restart.
+company_names:
+- Gamuda M&E Sdn. Bhd.
+- Gamuda Berhad
+- Gamuda Engineering Sdn Bhd
+- Pro-Cahaya Industries Sdn. Bhd.
+- Pro Cahaya Industries Sdn. Bhd.
+- Air Selangor
+- Air Selangor Sdn. Bhd.
+- Pengurusan Air Selangor Sdn. Bhd.
+- Schneider Electric
+- AVEVA
+company_acronyms:
+- PCI
+- GME
+- CPC
+project_names:
+- Sg. Rasau Water Supply
+- Sungai Rasau Water Supply
+- Sg. Rasau Project
+- Sungai Rasau Project
+- Rasau Intake
+- Water Treatment Plant
+locations:
+# Place names the NER model misses in context (e.g. "Ringgit Malaysia").
+# Only list a name the corpus labels as LOCATION: every extra phrase the
+# analyzer emits without a matching label still scores as a false positive.
+# Bare "Selangor" is kept for standalone occurrences (e.g. postcodes); where
+# it sits inside "Selangor Darul Ehsan" or a company name, /analyze conflict
+# resolution drops the shorter/lower-priority span (see conflicts.py).
+- Malaysia
+- Selangor
+- Selangor Darul Ehsan
