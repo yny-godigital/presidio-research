@@ -15,6 +15,7 @@ export type ScoredSpan = {
   start: number;
   end: number;
   score: number;
+  origin?: string;
 };
 
 /** Counts plus precision, recall, and F1 for one entity type. */
@@ -113,6 +114,7 @@ export type SpanWithText = {
   start: number;
   end: number;
   text: string;
+  origin?: string;
 };
 
 // WHY three FP kinds: exact-match scoring lumps "wrong label" together with
@@ -123,6 +125,7 @@ export type FalsePositiveKind = "wrong-type" | "boundary" | "no-label";
 export type FalsePositiveSpan = SpanWithText & {
   score: number;
   kind: FalsePositiveKind;
+  origin?: string;
   /** Overlapping label on the same page, if any — the ground truth this FP collided with. */
   label?: SpanWithText;
 };
@@ -225,6 +228,32 @@ export function listFalseNegativeSpans(
     if (falseNegativeKeys.has(k) && !seen.has(k)) {
       seen.add(k);
       out.push({ type: l.type, page: l.page, start: l.start, end: l.end, text: spanText(pageText, l) });
+    }
+  }
+  return out;
+}
+
+export function listTruePositiveSpans(
+  labels: LabeledEntity[],
+  detections: ScoredSpan[],
+  pageText: (page: number) => string
+): SpanWithText[] {
+  const { labelKeys, detectionKeys } = spanKeySets(labels, detections);
+  const seen = new Set<string>();
+  const out: SpanWithText[] = [];
+
+  for (const d of detections) {
+    const k = makeSpanKey(d);
+    if (labelKeys.has(k) && !seen.has(k)) {
+      seen.add(k);
+      out.push({
+        type: d.type,
+        page: d.page,
+        start: d.start,
+        end: d.end,
+        origin: d.origin,
+        text: spanText(pageText, d),
+      });
     }
   }
   return out;

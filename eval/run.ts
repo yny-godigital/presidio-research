@@ -9,6 +9,7 @@ import { normalizeStem } from "./normalize.js";
 import { validateLabel, type LabeledEntity, type LabelFile } from "./schema.js";
 import { extractPdfPages, EXTRACTOR_ID } from "./extract.js";
 import {
+  listTruePositiveSpans,
   listFalseNegativeSpans,
   listFalsePositiveSpans,
   listLeakedSpans,
@@ -24,9 +25,12 @@ import { PresidioAnalyzerClient } from "./analyzer-client.js";
 import colors from "picocolors";
 const { bold, cyan, dim, green, red, yellow } = colors;
 
+//stems are file name without the extension, lowercased with single underscores.
 export function checkPairing(pdfs: string[], labelFiles: string[]): string[] {
-  const pdfStems = pdfs.map((f) => normalizeStem(f));
+  // 1. Normalize the pdf files into stems
+  const pdfStems = pdfs.map((f) => normalizeStem(f)); 
   const pdfStemSet = new Set(pdfStems);
+  // 2. Normalize the label files into stems
   const labelStems = labelFiles.map((f) => normalizeStem(f.replace(/\.json$/i, "")));
   const labelStemSet = new Set(labelStems);
   const missingLabels = pdfStems.filter((s) => !labelStemSet.has(s));
@@ -44,9 +48,11 @@ export type ScoredFile = {
   stem: string;
   detection: DetectionScore;
   leaked: LabeledEntity[];
+  truePositives: SpanWithText[];
   falsePositives: FalsePositiveSpan[];
   falseNegatives: SpanWithText[];
   falsePositiveBreakdown: FalsePositiveBreakdown;
+  rawDetections: (SpanWithText & { score: number })[];
   roundtrip: Omit<RoundtripScore, "pages">;
   roundtripPages: RoundtripPage[];
 };
@@ -59,24 +65,58 @@ export async function scoreOnePdf(
   const file = basename(pdfPath);
   const stem = normalizeStem(file);
   const label = JSON.parse(readFileSync(labelPath, "utf8")) as LabelFile;
+
   if (label.extractor !== EXTRACTOR_ID) throw new Error(`Extractor mismatch for ${file}: label has ${label.extractor}, runner uses ${EXTRACTOR_ID}`);
+
   const pages = await extractPdfPages(pdfPath);
+
   validateLabel(pages, label);
+
   const detections: ScoredSpan[] = [];
+  const rawDetections: (SpanWithText & { score: number })[] = [];
+
   for (let page = 1; page <= pages.length; page++) {
-    const found = await client.analyze(pages[page - 1] ?? "");
-    for (const d of found) detections.push({ type: d.entityType, page, start: d.start, end: d.end, score: d.score });
+    const pageStr = pages[page - 1] ?? "";
+    const { resolved, raw } = await client.analyzeWithRaw(pageStr);
+
+    for (const d of resolved) {
+      detections.push({
+        type: d.entityType,
+        page,
+        start: d.start,
+        end: d.end,
+        score: d.score,
+        origin: d.origin ?? "unknown",
+      });
+    }
+
+    for (const r of raw) {
+      rawDetections.push({
+        type: r.entityType,
+        page,
+        start: r.start,
+        end: r.end,
+        score: r.score,
+        origin: r.origin ?? "unknown",
+        text: pageStr.slice(r.start, r.end),
+      });
+    }
   }
+
   const detection = scoreDetections(label.entities, detections);
   const leaked = listLeakedSpans(label.entities, detections);
   const pageText = (page: number) => pages[page - 1] ?? "";
+  const truePositives = listTruePositiveSpans(label.entities, detections, pageText);
   const falsePositives = listFalsePositiveSpans(label.entities, detections, pageText);
   const falseNegatives = listFalseNegativeSpans(label.entities, detections, pageText);
   const falsePositiveBreakdown: FalsePositiveBreakdown = { "wrong-type": 0, boundary: 0, "no-label": 0 };
+
   for (const f of falsePositives) falsePositiveBreakdown[f.kind]++;
+
   const roundtrip = await scoreRoundtrip(pages, client);
   const { pages: roundtripPages, ...roundtripScore } = roundtrip;
-  return { file, stem, detection, leaked, falsePositives, falseNegatives, falsePositiveBreakdown, roundtrip: roundtripScore, roundtripPages };
+
+  return { file, stem, detection, leaked, truePositives, falsePositives, falseNegatives, falsePositiveBreakdown, rawDetections, roundtrip: roundtripScore, roundtripPages };
 }
 
 export function excerpt(text: string, limit = 200): string {
@@ -104,13 +144,17 @@ async function main(): Promise<void> {
   checkPairing(pdfs, labelFiles);
   const results: unknown[] = [];
   const resultsDir = join(outPath, "..");
+
   for (const pdf of pdfs) {
     const stem = normalizeStem(pdf);
     const row = await scoreOnePdf(join(inputsDir, pdf), join(labelsDir, `${stem}.json`), client);
-    const { roundtripPages, falsePositives, falseNegatives, ...summaryRow } = row;
+    const { roundtripPages, truePositives, falsePositives, falseNegatives, ...summaryRow } = row;
+
     results.push(summaryRow);
+
     writeDetailFiles(resultsDir, stem, roundtripPages);
-    writeDetectionDetailFile(resultsDir, stem, falsePositives, falseNegatives);
+    writeDetectionDetailFile(resultsDir, stem, truePositives, falsePositives, falseNegatives);
+    writeRawResultsFile(resultsDir, stem, row.rawDetections);
     printScoreLine(row);
     printPageExcerpts(roundtripPages);
     printLeakedValues(row);
@@ -171,23 +215,67 @@ function labelHint(f: FalsePositiveSpan): string {
 
 function writeDetailFiles(dir: string, stem: string, pages: RoundtripPage[]): void {
   mkdirSync(dir, { recursive: true });
+
   const anonSections = pages.map((p) => {
     const header = `--- page ${p.page} ---`;
     if (p.skipped) return `${header}\n(empty page, skipped)`;
     if (p.blocked.length > 0) return `${header}\nblocked: ${p.blocked.join(", ")}`;
-    return `${header}\n// mapping: ${JSON.stringify(p.mapping)}\n${p.anonymized}`;
+    return `${header}\n${p.anonymized}`;
   });
+
   const restoredSections = pages.map((p) => {
     const header = `--- page ${p.page} ---`;
     if (p.skipped) return `${header}\n(empty page, skipped)`;
     if (p.blocked.length > 0) return `${header}\nblocked: ${p.blocked.join(", ")}`;
     return `${header}\n${p.restored}`;
   });
+
+  const mappingSections = pages.map((p) => {
+    const header = `--- page ${p.page} ---`;
+    if (p.skipped) return `${header}\n(empty page, skipped)`;
+    if (!p.mapping || p.mapping.length === 0) return `${header}\n(no tokens)`;
+
+    const tokenLines = p.mapping.map((m) => {
+      const orig = JSON.stringify(m.original);
+      return `  ${m.token.padEnd(24)} | ${m.entity_type.padEnd(16)} -> ${orig}`;
+    });
+
+    return `${header}\n${tokenLines.join("\n")}`;
+  });
+
   writeFileSync(join(dir, `${stem}.anonymized.txt`), `${anonSections.join("\n\n")}\n`);
   writeFileSync(join(dir, `${stem}.restored.txt`), `${restoredSections.join("\n\n")}\n`);
+  writeFileSync(join(dir, `${stem}.mapping.txt`), `${mappingSections.join("\n\n")}\n`);
 }
 
-function writeDetectionDetailFile(dir: string, stem: string, falsePositives: FalsePositiveSpan[], falseNegatives: SpanWithText[]): void {
+function writeRawResultsFile(dir: string, stem: string, rawDetections: (SpanWithText & { score: number })[]): void {
+  mkdirSync(dir, { recursive: true });
+  const lines: string[] = [];
+
+  // Group by page
+  const maxPage = rawDetections.reduce((max, d) => Math.max(max, d.page), 1);
+
+  for (let page = 1; page <= maxPage; page++) {
+    const pageItems = rawDetections.filter((d) => d.page === page);
+    lines.push(`--- page ${page} (${pageItems.length} raw detections) ---`);
+    if (pageItems.length === 0) {
+      lines.push("  (no detections)");
+      continue;
+    }
+
+    for (const item of pageItems) {
+      lines.push(
+        `page ${item.page}: ${item.type} @ ${item.start}..${item.end} [via ${item.origin ?? "unknown"}]`
+      );
+      lines.push(`  ${JSON.stringify(item.text)}`);
+    }
+    lines.push("");
+  }
+
+  writeFileSync(join(dir, `${stem}.raw-results.txt`), `${lines.join("\n")}\n`);
+}
+
+function writeDetectionDetailFile(dir: string, stem: string, truePositives: SpanWithText[], falsePositives: FalsePositiveSpan[], falseNegatives: SpanWithText[]): void {
   mkdirSync(dir, { recursive: true });
   const lines: string[] = [];
   lines.push(`--- false positives (${falsePositives.length}) ---`);
@@ -196,7 +284,7 @@ function writeDetectionDetailFile(dir: string, stem: string, falsePositives: Fal
     if (group.length === 0) continue;
     lines.push(`--- false positive: ${kind} (${group.length}) ---`);
     for (const f of group) {
-      lines.push(`page ${f.page}: ${f.type} @ ${f.start}..${f.end}`);
+      lines.push(`page ${f.page}: ${f.type} @ ${f.start}..${f.end} [via ${f.origin}]`);
       lines.push(`  ${JSON.stringify(f.text)}`);
       if (f.label) {
         lines.push(`  label was ${f.label.type} @ ${f.label.start}..${f.label.end}`);
@@ -210,6 +298,14 @@ function writeDetectionDetailFile(dir: string, stem: string, falsePositives: Fal
     lines.push(`  ${JSON.stringify(f.text)}`);
   }
   lines.push("");
+
+  lines.push(`=== TRUE POSITIVES (${truePositives.length}) ===`);
+  for (const t of truePositives) {
+    lines.push(`page ${t.page}: ${t.type} @ ${t.start}..${t.end} [via ${t.origin ?? "unknown"}]`);
+    lines.push(`  ${JSON.stringify(t.text)}`);
+  }
+  lines.push("");
+
   writeFileSync(join(dir, `${stem}.detection-detail.txt`), `${lines.join("\n")}\n`);
 }
 

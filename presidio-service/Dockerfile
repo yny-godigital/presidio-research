@@ -6,6 +6,7 @@ COPY presidio-service/pyproject.toml presidio-service/uv.lock presidio-service/.
 COPY presidio-service/recognizers.yaml presidio-service/gazetteer.yaml ./
 RUN uv sync --frozen --no-dev
 COPY presidio-service/app.py presidio-service/config.py presidio-service/recognizer_registry.py presidio-service/recognizers.py presidio-service/gazetteer.py presidio-service/anonymizer.py ./
+COPY presidio-service/app.py presidio-service/config.py presidio-service/conflicts.py ./
 # The image carries its own copy of the shared policy file; the env var
 # overrides the repository-relative default, which does not exist in the image.
 COPY policy/policy.yaml ./policy.yaml

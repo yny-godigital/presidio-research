@@ -1,0 +1,25 @@
+FROM node:20-bookworm
+
+# Install Python 3 and Tesseract OCR needed by eval/extract.ts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    tesseract-ocr \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyMuPDF required by the extraction pipeline
+RUN pip3 install --no-cache-dir --break-system-packages pymupdf==1.28.2
+
+WORKDIR /app
+
+# Ensure /tmp/opencode directory exists for test fixtures
+RUN mkdir -p /tmp/opencode
+
+# Install npm dependencies
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "test"]

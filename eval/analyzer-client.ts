@@ -10,7 +10,13 @@ export type DetectedEntity = {
   start: number;
   end: number;
   score: number;
+  origin?: string;
 };
+
+export type AnalyzeResult = {
+  resolved: DetectedEntity[];
+  raw: DetectedEntity[];
+}
 
 export interface AnalyzerClient {
   analyze(text: string): Promise<DetectedEntity[]>;
@@ -44,6 +50,7 @@ type PresidioResult = {
   start: number;
   end: number;
   score: number;
+  origin?: string;
 };
 
 export class PresidioAnalyzerClient implements AnalyzerClient {
@@ -72,7 +79,44 @@ export class PresidioAnalyzerClient implements AnalyzerClient {
       start: r.start,
       end: r.end,
       score: r.score,
+      origin: r.origin ?? "unknown",
     }));
+  }
+
+  async analyzeWithRaw(text: string): Promise<AnalyzeResult> {
+    const response = await fetch (`${this.baseUrl}/analyze`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        text,
+        language: "en",
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    if(!response.ok){
+      throw new Error(`Presidio analyzer returned HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const mapItem = (r: any): DetectedEntity => ({
+      entityType: r.entity_type,
+      start: r.start,
+      end: r.end,
+      score: r.score,
+      origin: r.origin ?? "unknown"
+    });
+
+    if (data && typeof data === "object" && !Array.isArray(data) && "resolved" in data){
+      return {
+        resolved: (data.resolved ?? []).map(mapItem),
+        raw: (data.raw ?? []).map(mapItem),
+      };
+    }
+
+    const list = Array.isArray(data) ? data.map(mapItem) : [];
+    return { resolved: list, raw: list };
   }
 
   async anonymize(text: string): Promise<AnonymizeResult> {

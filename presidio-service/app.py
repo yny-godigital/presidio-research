@@ -92,6 +92,19 @@ def health():
         )
     return {"status": "up"}
 
+def _format_item(item):
+    origin = (
+        item.analysis_explanation.recognizer
+        if item.analysis_explanation
+        else getattr(item, "recognition_metadata", {}).get("recognizer_name", "unknown")
+    )
+    return {
+        "entity_type": item.entity_type,
+        "start": item.start,
+        "end": item.end,
+        "score": item.score,
+        "origin": origin,
+    }
 
 @app.post("/analyze")
 def analyze(body: dict, engine=Depends(get_engine)):
@@ -105,28 +118,26 @@ def analyze(body: dict, engine=Depends(get_engine)):
         raise HTTPException(status_code=422, detail="Only language en is supported")
     started = time.perf_counter()
     try:
-        results = engine.analyze(text=text, language=language)
+        raw_results = engine.analyze(text=text, language=language, return_decision_process=True)
     except Exception as exc:  # noqa: BLE001 - gateway maps any failure to its closed 502 path
         logger.exception("Analysis failed")
         raise HTTPException(status_code=500, detail="Analysis failed") from exc
+
+    raw_payload = [_format_item(item) for item in raw_results]
     # AnalyzerEngine only dedupes same-type contained spans; resolve the
     # remaining cross-recognizer overlaps so one span wins before responding.
-    results = resolve_conflicts(results)
-    payload = [
-        {
-            "entity_type": item.entity_type,
-            "start": item.start,
-            "end": item.end,
-            "score": item.score,
-        }
-        for item in results
-    ]
+    resolved_results = resolve_conflicts(raw_results)
+    resolved_payload = [_format_item(item) for item in resolved_results]
+
     elapsed_ms = (time.perf_counter() - started) * 1000
-    by_type = sorted({item["entity_type"] for item in payload})
+    by_type = sorted({item["entity_type"] for item in resolved_payload})
     logger.info(
         "Analyzed %d chars in %.1fms: %s", len(text), elapsed_ms, ",".join(by_type)
     )
-    return payload
+    return {
+        "resolved": resolved_payload,
+        "raw": raw_payload,
+    }
 
 
 @app.post("/anonymize")

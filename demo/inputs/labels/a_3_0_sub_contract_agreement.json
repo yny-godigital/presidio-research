@@ -1,0 +1,272 @@
+{
+  "source": "A-3.0 - Sub-Contract Agreement.pdf",
+  "extractor": "pymupdf-1.28.2+ocr",
+  "entities": [
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul Ehsan",
+      "page": 1,
+      "start": 65,
+      "end": 85
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau Intake",
+      "page": 1,
+      "start": 139,
+      "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 1,
+      "start": 178,
+      "end": 199
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 1,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN BHD",
+      "page": 1,
+      "start": 400,
+      "end": 418
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor",
+      "page": 1,
+      "start": 623,
+      "end": 631
+    },
+    {
+      "type": "LOCATION",
+      "value": "Malaysia",
+      "page": 1,
+      "start": 741,
+      "end": 749
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PENGURUSAN AIR SELANGOR SDN BHD",
+      "page": 1,
+      "start": 1061,
+      "end": 1092
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1156,
+      "end": 1178
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul\nEhsan",
+      "page": 1,
+      "start": 1196,
+      "end": 1216
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau Intake",
+      "page": 1,
+      "start": 1259,
+      "end": 1271
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 1,
+      "start": 1298,
+      "end": 1319
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA BERHAD",
+      "page": 1,
+      "start": 1346,
+      "end": 1359
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1472,
+      "end": 1494
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul Ehsan",
+      "page": 1,
+      "start": 1512,
+      "end": 1532
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau\nIntake",
+      "page": 1,
+      "start": 1575,
+      "end": 1587
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 1,
+      "start": 1614,
+      "end": 1635
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA ENGINEERING SDN BHD",
+      "page": 1,
+      "start": 1685,
+      "end": 1711
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda Berhad",
+      "page": 1,
+      "start": 1769,
+      "end": 1782
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1849,
+      "end": 1871
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul Ehsan",
+      "page": 1,
+      "start": 1889,
+      "end": 1909
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau Intake",
+      "page": 1,
+      "start": 1952,
+      "end": 1964
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 1,
+      "start": 1991,
+      "end": 2012
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN. BHD.",
+      "page": 1,
+      "start": 2062,
+      "end": 2082
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 1,
+      "start": 2619,
+      "end": 2636
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 2,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul Ehsan",
+      "page": 2,
+      "start": 65,
+      "end": 85
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau Intake",
+      "page": 2,
+      "start": 139,
+      "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 2,
+      "start": 178,
+      "end": 199
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 2,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "LOCATION",
+      "value": "Malaysia",
+      "page": 2,
+      "start": 1543,
+      "end": 1551
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 3,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "LOCATION",
+      "value": "Selangor Darul Ehsan",
+      "page": 3,
+      "start": 65,
+      "end": 85
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Rasau Intake",
+      "page": 3,
+      "start": 139,
+      "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Water Treatment Plant",
+      "page": 3,
+      "start": 178,
+      "end": 199
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 3,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN BHD",
+      "page": 3,
+      "start": 435,
+      "end": 453
+    }
+  ]
+}

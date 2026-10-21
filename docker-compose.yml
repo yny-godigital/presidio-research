@@ -10,3 +10,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+      
+  eval-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.eval
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - PRESIDIO_ANALYZER_URL=http://presidio-analyzer:3000
+    depends_on:
+      presidio-analyzer:
+        condition: service_healthy

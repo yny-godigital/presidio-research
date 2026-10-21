@@ -23,6 +23,6 @@
 | 15 | Project, site, and package identities         | Sg. Rasau Water Supply Scheme, Rasau WTP, Rasau Intake, full Package 1 title.                          | High     |
 | 16 | Letter, contract, and award references        | `GMESB/SgR/2025/LA/PROCAHAYA/016`; `PCI/GMESB/SgR/2026/LET/004`.                                       | Medium   |
 | 17 | Technical document and tracking identifiers   | `RWTP-GB-MNE-MSA-000470`; `PCI-02PJP25-008-TRN012`.                                                    | Medium   |
-| 18 | Supplier names and supply-chain relationships | Schneider Electric, AVEVA, Vertiv, associated with procurement packages.                               | Medium   |
+| 18 | Supplier names and supply-chain relationships | Schneider Electric, AVEVA, Vertiv, associated with procurement packages.                               | High     |
 | 19 | Commercial amounts and negotiated terms       | RM30 million award; RM148.888 million final sum; RM77 million milestone; RM42,000 daily delay damages. | Medium   |
 | 20 | Project dates, schedules, and progress        | Award/commencement dates, completion periods, submission dates, delivery estimates, overdue durations. | Medium   |

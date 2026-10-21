@@ -50,7 +50,7 @@ class GazetteerRecognizer(EntityRecognizer):
             self.load()
         return [
             RecognizerResult(
-                entity_type=self._entity, start=start, end=end, score=DENY_LIST_SCORE
+                entity_type=self._entity, start=start, end=end, score=DENY_LIST_SCORE, recognition_metadata={"recognizer_name": self.name},
             )
             for start, end, _ in self._matcher.match(text)
         ]
