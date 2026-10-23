@@ -10,18 +10,18 @@
       "end": 46
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul Ehsan",
-      "page": 1,
-      "start": 65,
-      "end": 85
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau Intake",
       "page": 1,
       "start": 139,
       "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping Mains",
+      "page": 1,
+      "start": 153,
+      "end": 176
     },
     {
       "type": "PROJECT_NAME",
@@ -45,20 +45,6 @@
       "end": 418
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor",
-      "page": 1,
-      "start": 623,
-      "end": 631
-    },
-    {
-      "type": "LOCATION",
-      "value": "Malaysia",
-      "page": 1,
-      "start": 741,
-      "end": 749
-    },
-    {
       "type": "ORGANIZATION",
       "value": "PENGURUSAN AIR SELANGOR SDN BHD",
       "page": 1,
@@ -73,18 +59,18 @@
       "end": 1178
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul\nEhsan",
-      "page": 1,
-      "start": 1196,
-      "end": 1216
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau Intake",
       "page": 1,
       "start": 1259,
       "end": 1271
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping\nMains",
+      "page": 1,
+      "start": 1273,
+      "end": 1296
     },
     {
       "type": "PROJECT_NAME",
@@ -108,18 +94,18 @@
       "end": 1494
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul Ehsan",
-      "page": 1,
-      "start": 1512,
-      "end": 1532
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau\nIntake",
       "page": 1,
       "start": 1575,
       "end": 1587
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping Mains",
+      "page": 1,
+      "start": 1589,
+      "end": 1612
     },
     {
       "type": "PROJECT_NAME",
@@ -150,18 +136,18 @@
       "end": 1871
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul Ehsan",
-      "page": 1,
-      "start": 1889,
-      "end": 1909
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau Intake",
       "page": 1,
       "start": 1952,
       "end": 1964
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping Mains",
+      "page": 1,
+      "start": 1966,
+      "end": 1989
     },
     {
       "type": "PROJECT_NAME",
@@ -192,18 +178,18 @@
       "end": 46
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul Ehsan",
-      "page": 2,
-      "start": 65,
-      "end": 85
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau Intake",
       "page": 2,
       "start": 139,
       "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping Mains",
+      "page": 2,
+      "start": 153,
+      "end": 176
     },
     {
       "type": "PROJECT_NAME",
@@ -220,13 +206,6 @@
       "end": 276
     },
     {
-      "type": "LOCATION",
-      "value": "Malaysia",
-      "page": 2,
-      "start": 1543,
-      "end": 1551
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Sg. Rasau Water Supply",
       "page": 3,
@@ -234,18 +213,18 @@
       "end": 46
     },
     {
-      "type": "LOCATION",
-      "value": "Selangor Darul Ehsan",
-      "page": 3,
-      "start": 65,
-      "end": 85
-    },
-    {
       "type": "PROJECT_NAME",
       "value": "Rasau Intake",
       "page": 3,
       "start": 139,
       "end": 151
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Raw Water Pumping Mains",
+      "page": 3,
+      "start": 153,
+      "end": 176
     },
     {
       "type": "PROJECT_NAME",

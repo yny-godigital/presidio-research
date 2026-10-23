@@ -9,6 +9,8 @@ entities:
     action: pseudonymize
   ORGANIZATION:
     action: pseudonymize
+  PROJECT_NAME:
+    action: pseudonymize
   PROJECT_CODE:
     action: pseudonymize
   API_KEY:

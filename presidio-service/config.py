@@ -5,6 +5,10 @@ ServiceConfig = dict
 
 _DEFAULTS = {
     "nlp_model": "en_core_web_sm",
+    "active_entities": [
+        "ORGANIZATION",
+        "PROJECT_NAME"
+    ]
 }
 
 

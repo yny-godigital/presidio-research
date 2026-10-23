@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
 from presidio_anonymizer import AnonymizerEngine
+from presidio_anonymizer.entities import ConflictResolutionStrategy
 
 from anonymizer import (
     TokenCollector,
@@ -19,6 +20,7 @@ from anonymizer import (
 from config import load_config
 from conflicts import resolve_conflicts
 from recognizer_registry import build_registry, registry_file_from_env
+from extraction.artifact_extraction import format_presidio_artifacts_page, format_raw_spacy_page
 
 logger = logging.getLogger("presidio-service")
 
@@ -29,7 +31,6 @@ ANONYMIZER = None
 
 MODES = ("one_way", "reversible")
 OUTPUT_FORMATS = ("token", "placeholder", "mask")
-
 
 def build_engine():
     from presidio_analyzer import AnalyzerEngine
@@ -93,23 +94,27 @@ def health():
     return {"status": "up"}
 
 def _format_item(item):
+    explanation = getattr(item, "analysis_explanation", None)
+    metadata = getattr(item, "recognition_metadata", None) or {}
     origin = (
-        item.analysis_explanation.recognizer
-        if item.analysis_explanation
-        else getattr(item, "recognition_metadata", {}).get("recognizer_name", "unknown")
+        explanation.recognizer
+        if explanation
+        else metadata.get("recognizer_name", "unknown")
     )
     return {
-        "entity_type": item.entity_type,
-        "start": item.start,
-        "end": item.end,
-        "score": item.score,
+        "entity_type": getattr(item, "entity_type", ""),
+        "start": getattr(item, "start", 0),
+        "end": getattr(item, "end", 0),
+        "score": getattr(item, "score", -1.0),
         "origin": origin,
     }
 
 @app.post("/analyze")
-def analyze(body: dict, engine=Depends(get_engine)):
+def analyze(body: dict, engine=Depends(get_engine), anonymizer=Depends(get_anonymizer)):
     text = body.get("text", "")
     language = body.get("language", "en")
+    entities = body.get("entities", CONFIG.get("active_entities"))
+    page = body.get("page")
     if not isinstance(text, str) or not text.strip():
         raise HTTPException(
             status_code=422, detail="Field text must be a non-empty string"
@@ -117,8 +122,18 @@ def analyze(body: dict, engine=Depends(get_engine)):
     if language != "en":
         raise HTTPException(status_code=422, detail="Only language en is supported")
     started = time.perf_counter()
+
+    nlp_model = engine.nlp_engine.nlp[language]
+    doc = nlp_model(text)
+    if hasattr(engine.nlp_engine, "_doc_to_nlp_artifact"):
+        nlp_artifacts = engine.nlp_engine._doc_to_nlp_artifact(doc, language)
+    elif hasattr(engine.nlp_engine, "_doc_to_nlp_artifacts"):
+        nlp_artifacts = engine.nlp_engine._doc_to_nlp_artifacts(doc, language)
+    else:
+        nlp_artifacts = engine.nlp_engine.process_text(text, language)
+    
     try:
-        raw_results = engine.analyze(text=text, language=language, return_decision_process=True)
+        raw_results = engine.analyze(text=text, language=language, entities=entities, nlp_artifacts=nlp_artifacts, return_decision_process=True)
     except Exception as exc:  # noqa: BLE001 - gateway maps any failure to its closed 502 path
         logger.exception("Analysis failed")
         raise HTTPException(status_code=500, detail="Analysis failed") from exc
@@ -126,8 +141,26 @@ def analyze(body: dict, engine=Depends(get_engine)):
     raw_payload = [_format_item(item) for item in raw_results]
     # AnalyzerEngine only dedupes same-type contained spans; resolve the
     # remaining cross-recognizer overlaps so one span wins before responding.
-    resolved_results = resolve_conflicts(raw_results)
+
+    #Presidio's conflict resolution
+    sorted_raw = anonymizer._copy_recognizer_results(raw_results)
+    sorted_raw.sort(key=lambda x: (x.start, x.end))
+
+    surviving_slices = anonymizer._remove_conflicts_and_get_text_manipulation_data(
+        sorted_raw,
+        conflict_resolution=ConflictResolutionStrategy.REMOVE_INTERSECTIONS,
+    )
+
+    # Map surviving spans back to raw RecognizerResults to keep original scores and origins
+    raw_map = {(r.start, r.end, getattr(r, "entity_type", None)): r for r in raw_results}
+    resolved_results = [
+        raw_map.get((s.start, s.end, getattr(s, "entity_type", None)), s) for s in surviving_slices
+    ]
+
     resolved_payload = [_format_item(item) for item in resolved_results]
+
+    presidio_artifacts_table = format_presidio_artifacts_page(nlp_artifacts, page=page)
+    raw_nlp_table = format_raw_spacy_page(doc, page=page)
 
     elapsed_ms = (time.perf_counter() - started) * 1000
     by_type = sorted({item["entity_type"] for item in resolved_payload})
@@ -137,6 +170,8 @@ def analyze(body: dict, engine=Depends(get_engine)):
     return {
         "resolved": resolved_payload,
         "raw": raw_payload,
+        "presidio_artifacts": presidio_artifacts_table,
+        "raw_nlp": raw_nlp_table
     }
 
 
@@ -151,6 +186,8 @@ def anonymize(
     language = body.get("language", "en")
     mode = body.get("mode", "one_way")
     output_format = body.get("format", "token")
+    entities = body.get("entities", CONFIG.get("active_entities"))
+
     if not isinstance(text, str) or not text.strip():
         raise HTTPException(
             status_code=422, detail="Field text must be a non-empty string"
@@ -174,7 +211,7 @@ def anonymize(
         )
     started = time.perf_counter()
     try:
-        results = engine.analyze(text=text, language=language)
+        results = engine.analyze(text=text, language=language, entities=entities)
     except Exception as exc:  # noqa: BLE001 - any analyzer failure maps to 500
         logger.exception("Analysis failed")
         raise HTTPException(status_code=500, detail="Analysis failed") from exc
@@ -185,7 +222,6 @@ def anonymize(
         raise HTTPException(
             status_code=422, detail=f"Blocked by policy: {', '.join(blocked)}"
         )
-    from presidio_anonymizer.entities import ConflictResolutionStrategy
 
     collector = TokenCollector()
     try:

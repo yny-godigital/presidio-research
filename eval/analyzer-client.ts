@@ -1,9 +1,8 @@
-// eval/analyzer-client.ts — WHAT: HTTP client for the Presidio service
-//   (/analyze, /anonymize, /restore).
-// WHY: the eval harness scores the live service, not a local simulation, so
-//   every call goes over HTTP with a 10 second timeout.
-// INPUT: service base URL. OUTPUT: detections, anonymized text plus mapping,
-//   restored text.
+// eval/analyzer-client.ts
+// WHAT: HTTP client for the Presidio service (/analyze, /anonymize, /restore).
+// WHY: the eval harness scores the live service, not a local simulation, so every call goes over HTTP with a 10 second timeout.
+// INPUT: service base URL.
+// OUTPUT: detections, anonymized text plus mapping, restored text.
 // EXAMPLE: new PresidioAnalyzerClient("http://127.0.0.1:3000")
 export type DetectedEntity = {
   entityType: string;
@@ -16,6 +15,8 @@ export type DetectedEntity = {
 export type AnalyzeResult = {
   resolved: DetectedEntity[];
   raw: DetectedEntity[];
+  presidioArtifacts?: string;
+  rawNlp?: string;
 }
 
 export interface AnalyzerClient {
@@ -83,18 +84,23 @@ export class PresidioAnalyzerClient implements AnalyzerClient {
     }));
   }
 
-  async analyzeWithRaw(text: string): Promise<AnalyzeResult> {
-    const response = await fetch (`${this.baseUrl}/analyze`, {
+async analyzeWithRaw(text: string, page?: number): Promise<AnalyzeResult> {
+    const payload: Record<string, unknown> = {
+      text,
+      language: "en",
+    };
+    if (page !== undefined) {
+      payload.page = page;
+    }
+
+    const response = await fetch(`${this.baseUrl}/analyze`, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        text,
-        language: "en",
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
       signal: AbortSignal.timeout(10_000),
     });
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error(`Presidio analyzer returned HTTP ${response.status}`);
     }
 
@@ -105,13 +111,15 @@ export class PresidioAnalyzerClient implements AnalyzerClient {
       start: r.start,
       end: r.end,
       score: r.score,
-      origin: r.origin ?? "unknown"
+      origin: r.origin ?? "unknown",
     });
 
-    if (data && typeof data === "object" && !Array.isArray(data) && "resolved" in data){
+    if (data && typeof data === "object" && !Array.isArray(data) && "resolved" in data) {
       return {
         resolved: (data.resolved ?? []).map(mapItem),
         raw: (data.raw ?? []).map(mapItem),
+        presidioArtifacts: data.presidio_artifacts,
+        rawNlp: data.raw_nlp,
       };
     }
 

@@ -20,6 +20,7 @@ project_names:
 - Sg. Rasau Project
 - Sungai Rasau Project
 - Rasau Intake
+- Raw Water Pumping Mains
 - Water Treatment Plant
 locations:
 # Place names the NER model misses in context (e.g. "Ringgit Malaysia").

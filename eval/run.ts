@@ -25,24 +25,7 @@ import { PresidioAnalyzerClient } from "./analyzer-client.js";
 import colors from "picocolors";
 const { bold, cyan, dim, green, red, yellow } = colors;
 
-//stems are file name without the extension, lowercased with single underscores.
-export function checkPairing(pdfs: string[], labelFiles: string[]): string[] {
-  // 1. Normalize the pdf files into stems
-  const pdfStems = pdfs.map((f) => normalizeStem(f)); 
-  const pdfStemSet = new Set(pdfStems);
-  // 2. Normalize the label files into stems
-  const labelStems = labelFiles.map((f) => normalizeStem(f.replace(/\.json$/i, "")));
-  const labelStemSet = new Set(labelStems);
-  const missingLabels = pdfStems.filter((s) => !labelStemSet.has(s));
-  const extraLabels = labelStems.filter((s) => !pdfStemSet.has(s));
-  if (missingLabels.length > 0 || extraLabels.length > 0) {
-    throw new Error(`Label pairing mismatch: missing labels for PDF stems: [${missingLabels.join(", ")}]; extra labels with no PDF: [${extraLabels.join(", ")}]`);
-  }
-  return pdfStems;
-}
-
-// Everything the runner produces for one file: the summary row plus the detail
-// that only the console and the detection-detail file use.
+//---everything the runner produces for one file: the summary row plus the detail that only the console and the detection-detail file use.
 export type ScoredFile = {
   file: string;
   stem: string;
@@ -55,30 +38,56 @@ export type ScoredFile = {
   rawDetections: (SpanWithText & { score: number })[];
   roundtrip: Omit<RoundtripScore, "pages">;
   roundtripPages: RoundtripPage[];
+  presidioArtifactPages: string[];
+  rawNlpPages: string[];
 };
 
-export async function scoreOnePdf(
-  pdfPath: string,
-  labelPath: string,
-  client: PresidioAnalyzerClient,
-): Promise<ScoredFile> {
+//---normalize then compare pdf and label, throwing errors when a pair is missing a part 
+//stems are file name without the extension, lowercased with single underscores.
+export function checkPairing(pdfs: string[], labelFiles: string[]): string[] {
+  // 1. Normalize the pdf files into stems
+  const pdfStems = pdfs.map((f) => normalizeStem(f)); 
+  const pdfStemSet = new Set(pdfStems);
+
+  // 2. Normalize the label files into stems
+  const labelStems = labelFiles.map((f) => normalizeStem(f.replace(/\.json$/i, "")));
+  const labelStemSet = new Set(labelStems);
+
+  // 3. Check for missing pairs between pdf and label files
+  const missingLabels = pdfStems.filter((s) => !labelStemSet.has(s));
+  const extraLabels = labelStems.filter((s) => !pdfStemSet.has(s));
+  if (missingLabels.length > 0 || extraLabels.length > 0) {
+    throw new Error(`Label pairing mismatch: missing labels for PDF stems: [${missingLabels.join(", ")}]; extra labels with no PDF: [${extraLabels.join(", ")}]`);
+  }
+  return pdfStems;
+}
+
+//---evaluate recognizer outputby comparing it with a complete answer key (label); also where the api is called
+export async function scoreOnePdf(pdfPath: string, labelPath: string, client: PresidioAnalyzerClient): Promise<ScoredFile> {
   const file = basename(pdfPath);
   const stem = normalizeStem(file);
   const label = JSON.parse(readFileSync(labelPath, "utf8")) as LabelFile;
 
   if (label.extractor !== EXTRACTOR_ID) throw new Error(`Extractor mismatch for ${file}: label has ${label.extractor}, runner uses ${EXTRACTOR_ID}`);
 
+  // 1. extract raw text from pdf file
   const pages = await extractPdfPages(pdfPath);
 
+  // 1.1 verify extracted text and label text are the same
   validateLabel(pages, label);
 
   const detections: ScoredSpan[] = [];
   const rawDetections: (SpanWithText & { score: number })[] = [];
+  const presidioArtifactPages: string[] = [];
+  const rawNlpPages: string[] = [];
 
+  // 2. send the extracted text to the analyzer per page, then collect the returned information
   for (let page = 1; page <= pages.length; page++) {
     const pageStr = pages[page - 1] ?? "";
-    const { resolved, raw } = await client.analyzeWithRaw(pageStr);
+    // */analyze is called here*
+    const { resolved, raw, presidioArtifacts, rawNlp } = await client.analyzeWithRaw(pageStr, page);
 
+    // 2.1 store the detections
     for (const d of resolved) {
       detections.push({
         type: d.entityType,
@@ -101,8 +110,16 @@ export async function scoreOnePdf(
         text: pageStr.slice(r.start, r.end),
       });
     }
+
+    if (presidioArtifacts) {
+      presidioArtifactPages.push(presidioArtifacts);
+    }
+    if (rawNlp) {
+      rawNlpPages.push(rawNlp);
+    }
   }
 
+  // 2.2 calculate the metrics, and find the correctly and incorrectly detected information
   const detection = scoreDetections(label.entities, detections);
   const leaked = listLeakedSpans(label.entities, detections);
   const pageText = (page: number) => pages[page - 1] ?? "";
@@ -113,18 +130,23 @@ export async function scoreOnePdf(
 
   for (const f of falsePositives) falsePositiveBreakdown[f.kind]++;
 
+  // 3. evaluates the anonymize and restore cycle
+  // */anonymize is called here*
   const roundtrip = await scoreRoundtrip(pages, client);
   const { pages: roundtripPages, ...roundtripScore } = roundtrip;
 
-  return { file, stem, detection, leaked, truePositives, falsePositives, falseNegatives, falsePositiveBreakdown, rawDetections, roundtrip: roundtripScore, roundtripPages };
+  return { file, stem, detection, leaked, truePositives, falsePositives, falseNegatives, falsePositiveBreakdown, rawDetections, roundtrip: roundtripScore, roundtripPages, presidioArtifactPages, rawNlpPages};
 }
 
+//---cut a string if its too long
 export function excerpt(text: string, limit = 200): string {
   const flat = text.replace(/\s+/g, " ").trim();
   return flat.length > limit ? `${flat.slice(0, limit)}...` : flat;
 }
 
+//---main orchestrator of the process
 async function main(): Promise<void> {
+  // 0. available commands
   const inputsDir = parseArg("inputs", "demo/inputs");
   const labelsDir = parseArg("labels", "demo/inputs/labels");
   const analyzerUrl = parseArg("analyzer", process.env.PRESIDIO_ANALYZER_URL ?? "http://127.0.0.1:3000");
@@ -135,36 +157,55 @@ async function main(): Promise<void> {
 
   const client = new PresidioAnalyzerClient(analyzerUrl);
 
+  // 1. collect files and validate their pairs
+  // 1.1 collect and filter pdf files
   const pdfs = readdirSync(inputsDir)
     .filter((f) => f.toLowerCase().endsWith(".pdf"))
     .filter((f) => only.size === 0 || only.has(normalizeStem(f)));
+
+  // 1.2 collect and filter label files
   const labelFiles = readdirSync(labelsDir)
     .filter((f) => !f.startsWith(".") && f.toLowerCase().endsWith(".json"))
     .filter((f) => only.size === 0 || only.has(normalizeStem(f.replace(/\.json$/i, ""))));
+
+  // 1.3 verify pairing
   checkPairing(pdfs, labelFiles);
+
+  // 2. call the recognizer/anonymizer and save/write its outputs
   const results: unknown[] = [];
   const resultsDir = join(outPath, "..");
 
+  // 2.1 runs on all pdfs
   for (const pdf of pdfs) {
+    // 2.2 identify and evaluate the document
     const stem = normalizeStem(pdf);
     const row = await scoreOnePdf(join(inputsDir, pdf), join(labelsDir, `${stem}.json`), client);
-    const { roundtripPages, truePositives, falsePositives, falseNegatives, ...summaryRow } = row;
+
+    // 2.3 separate summary metrics from unneeded details 
+    const { roundtripPages, truePositives, falsePositives, falseNegatives, presidioArtifactPages, rawNlpPages, ...summaryRow } = row;
 
     results.push(summaryRow);
 
+    // 2.4 save artifacts except for summary.json
     writeDetailFiles(resultsDir, stem, roundtripPages);
     writeDetectionDetailFile(resultsDir, stem, truePositives, falsePositives, falseNegatives);
     writeRawResultsFile(resultsDir, stem, row.rawDetections);
+    writeArtifactFiles(resultsDir, stem, presidioArtifactPages, rawNlpPages);
+
+    // 2.5 write into terminal
     printScoreLine(row);
     printPageExcerpts(roundtripPages);
     printLeakedValues(row);
     printFalsePositives(row);
     printFalseNegatives(row);
   }
+
+  // 2.6 create and save summary.json
   mkdirSync(resultsDir, { recursive: true });
   writeFileSync(outPath, JSON.stringify({ analyzerUrl, extractor: EXTRACTOR_ID, results }, null, 2));
 }
 
+//---writing into the console
 /** One console line per file, colored by threshold. */
 function printScoreLine(row: ScoredFile): void {
   const f1Str = row.detection.f1.toFixed(3);
@@ -213,6 +254,7 @@ function labelHint(f: FalsePositiveSpan): string {
   return ` (label was ${f.label.type} ${f.label.start}..${f.label.end}: ${excerpt(f.label.text, 80)})`;
 }
 
+//---writing to files and its specifications
 function writeDetailFiles(dir: string, stem: string, pages: RoundtripPage[]): void {
   mkdirSync(dir, { recursive: true });
 
@@ -275,38 +317,178 @@ function writeRawResultsFile(dir: string, stem: string, rawDetections: (SpanWith
   writeFileSync(join(dir, `${stem}.raw-results.txt`), `${lines.join("\n")}\n`);
 }
 
-function writeDetectionDetailFile(dir: string, stem: string, truePositives: SpanWithText[], falsePositives: FalsePositiveSpan[], falseNegatives: SpanWithText[]): void {
+function writeArtifactFiles(
+  dir: string,
+  stem: string,
+  presidioArtifactPages: string[],
+  rawNlpPages: string[]
+): void {
+  mkdirSync(dir, { recursive: true });
+
+  if (presidioArtifactPages.length > 0) {
+    writeFileSync(
+      join(dir, `${stem}.PresidioNlpArtifacts`),
+      `${presidioArtifactPages.join("\n\n").trimEnd()}\n`,
+      "utf-8"
+    );
+  }
+
+  if (rawNlpPages.length > 0) {
+    const rawNlpHeader = `NLP Engine: spaCy (en_core_web_sm)\n\n`;
+    writeFileSync(
+      join(dir, `${stem}.rawNlp`),
+      `${rawNlpHeader}${rawNlpPages.join("\n\n").trimEnd()}\n`,
+      "utf-8"
+    );
+  }
+}
+
+interface FormattedRow {
+  leftType: string;
+  leftSpan: string;
+  leftOrigin: string;
+  leftText: string;
+  rightType?: string;
+  rightSpan?: string;
+  rightOrigin?: string;
+  rightText?: string;
+}
+
+function formatPageRows(rows: FormattedRow[]): string[] {
+  let maxLeftType = 0;
+  let maxLeftSpan = 0;
+  let maxLeftOrigin = 0;
+  let maxLeftText = 0;
+  const hasRight = rows.some((r) => r.rightType !== undefined);
+
+  let maxRightType = 0;
+  let maxRightSpan = 0;
+  let maxRightOrigin = 0;
+
+  for (const r of rows) {
+    if (r.leftType.length > maxLeftType) maxLeftType = r.leftType.length;
+    if (r.leftSpan.length > maxLeftSpan) maxLeftSpan = r.leftSpan.length;
+    if (r.leftOrigin.length > maxLeftOrigin) maxLeftOrigin = r.leftOrigin.length;
+    if (hasRight && r.leftText.length > maxLeftText) maxLeftText = r.leftText.length;
+
+    if (r.rightType !== undefined) {
+      if (r.rightType.length > maxRightType) maxRightType = r.rightType.length;
+      const spanLen = (r.rightSpan ?? "").length;
+      if (spanLen > maxRightSpan) maxRightSpan = spanLen;
+      const originLen = (r.rightOrigin ?? "").length;
+      if (originLen > maxRightOrigin) maxRightOrigin = originLen;
+    }
+  }
+
+  return rows.map((r) => {
+    const c0 = r.leftType.padEnd(maxLeftType);
+    const c1 = r.leftSpan.padEnd(maxLeftSpan);
+    const c2 = r.leftOrigin.padEnd(maxLeftOrigin);
+
+    if (hasRight && r.rightType !== undefined) {
+      const c3 = r.leftText.padEnd(maxLeftText);
+      const r0 = r.rightType.padEnd(maxRightType);
+      const r1 = (r.rightSpan ?? "").padEnd(maxRightSpan);
+      const r2 = (r.rightOrigin ?? "").padEnd(maxRightOrigin);
+      const r3 = r.rightText ?? "";
+      return `${c0} | ${c1} | ${c2} | ${c3} || SUPPOSEDLY || ${r0} | ${r1} | ${r2} | ${r3}`;
+    }
+
+    return `${c0} | ${c1} | ${c2} | ${r.leftText}`;
+  });
+}
+
+function groupByPage<T extends { page: number }>(items: T[]): Map<number, T[]> {
+  const map = new Map<number, T[]>();
+  for (const item of items) {
+    const list = map.get(item.page) ?? [];
+    list.push(item);
+    map.set(item.page, list);
+  }
+  return map;
+}
+
+function writeDetectionDetailFile(
+  dir: string,
+  stem: string,
+  truePositives: SpanWithText[],
+  falsePositives: FalsePositiveSpan[],
+  falseNegatives: SpanWithText[]
+): void {
   mkdirSync(dir, { recursive: true });
   const lines: string[] = [];
-  lines.push(`--- false positives (${falsePositives.length}) ---`);
+
+  const formatText = (text: string) => text.replace(/\r?\n/g, "\\n");
+
+  // --- FALSE POSITIVES ---
+  lines.push(`--- false positive (${falsePositives.length}) ---`);
   for (const kind of ["wrong-type", "boundary", "no-label"] as const) {
     const group = falsePositives.filter((f) => f.kind === kind);
     if (group.length === 0) continue;
-    lines.push(`--- false positive: ${kind} (${group.length}) ---`);
-    for (const f of group) {
-      lines.push(`page ${f.page}: ${f.type} @ ${f.start}..${f.end} [via ${f.origin}]`);
-      lines.push(`  ${JSON.stringify(f.text)}`);
-      if (f.label) {
-        lines.push(`  label was ${f.label.type} @ ${f.label.start}..${f.label.end}`);
-        lines.push(`  ${JSON.stringify(f.label.text)}`);
-      }
+
+    lines.push(` -- false positive: ${kind} (${group.length}) --`);
+    const pages = groupByPage(group);
+
+    for (const [page, items] of pages.entries()) {
+      lines.push(`  - page ${page} -`);
+      const rows: FormattedRow[] = items.map((f) => {
+        const row: FormattedRow = {
+          leftType: f.type,
+          leftSpan: `${f.start}-${f.end}`,
+          leftOrigin: f.origin ?? "unknown",
+          leftText: formatText(f.text),
+        };
+        if (f.label) {
+          row.rightType = f.label.type;
+          row.rightSpan = `${f.label.start}-${f.label.end}`;
+          row.rightOrigin = (f.label as any).origin ?? "ground_truth";
+          row.rightText = formatText(f.label.text);
+        }
+        return row;
+      });
+
+      lines.push(...formatPageRows(rows));
+      lines.push("");
     }
   }
-  lines.push(`--- false negatives (${falseNegatives.length}) ---`);
-  for (const f of falseNegatives) {
-    lines.push(`page ${f.page}: ${f.type} @ ${f.start}..${f.end}`);
-    lines.push(`  ${JSON.stringify(f.text)}`);
-  }
-  lines.push("");
 
+  // --- FALSE NEGATIVES ---
+  if (falseNegatives.length > 0) {
+    lines.push(`--- false negatives (${falseNegatives.length}) ---`);
+    const pages = groupByPage(falseNegatives);
+
+    for (const [page, items] of pages.entries()) {
+      lines.push(`  - page ${page} -`);
+      const rows: FormattedRow[] = items.map((f) => ({
+        leftType: f.type,
+        leftSpan: `${f.start}-${f.end}`,
+        leftOrigin: f.origin ?? "ground_truth",
+        leftText: formatText(f.text),
+      }));
+
+      lines.push(...formatPageRows(rows));
+      lines.push("");
+    }
+  }
+
+  // === TRUE POSITIVES ===
   lines.push(`=== TRUE POSITIVES (${truePositives.length}) ===`);
-  for (const t of truePositives) {
-    lines.push(`page ${t.page}: ${t.type} @ ${t.start}..${t.end} [via ${t.origin ?? "unknown"}]`);
-    lines.push(`  ${JSON.stringify(t.text)}`);
-  }
-  lines.push("");
+  const pages = groupByPage(truePositives);
 
-  writeFileSync(join(dir, `${stem}.detection-detail.txt`), `${lines.join("\n")}\n`);
+  for (const [page, items] of pages.entries()) {
+    lines.push(`  = page ${page} =`);
+    const rows: FormattedRow[] = items.map((t) => ({
+      leftType: t.type,
+      leftSpan: `${t.start}-${t.end}`,
+      leftOrigin: t.origin ?? "unknown",
+      leftText: formatText(t.text),
+    }));
+
+    lines.push(...formatPageRows(rows));
+    lines.push("");
+  }
+
+  writeFileSync(join(dir, `${stem}.detection-detail.txt`), `${lines.join("\n").trimEnd()}\n`);
 }
 
 // The guard keeps the module importable without side effects, so a future test
