@@ -5,6 +5,10 @@ services:
       dockerfile: presidio-service/Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./presidio-service:/app
+      - /app/.venv
+      - ./policy/policy.yaml:/app/policy.yaml
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:3000/health | grep -q up"]
       interval: 10s

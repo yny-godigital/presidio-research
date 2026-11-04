@@ -1,0 +1,131 @@
+# presidio-service/recognizers.yaml
+# Detection registry in Presidio provider format. Edits take effect on
+# service restart. company_names plus company_acronyms plus project_names
+# plus locations feed the automaton gazetteer; everything else is patterns,
+# scores, and flags.
+# Exception: NRIC and SSM numbers need validate_result() structural checks
+# (real dates, JPN codes, registration year/type) no YAML pattern can do,
+# so they live in recognizers.py and are registered by recognizer_registry.py.
+supported_languages:
+  - en
+recognizers:
+  # - name: SpacyRecognizer
+    # type: predefined
+  - name: EmailRecognizer
+    type: predefined
+  - name: PhoneRecognizer
+    type: predefined
+  - name: DateRecognizer
+    type: predefined
+  - name: UrlRecognizer
+    type: predefined
+  - name: ProjectCodeRecognizer
+    type: custom
+    supported_entity: PROJECT_CODE
+    patterns:
+      - name: prj code
+        regex: 'PRJ-\d{4}-\d{3}'
+        score: 0.9
+    supported_languages:
+      - language: en
+        context: [project, reference]
+    enabled: true
+  - name: MalaysianCompanyShapeRecognizer
+    type: custom
+    supported_entity: ORGANIZATION
+    patterns:
+      - name: company suffix shape
+        regex: '\b([A-Z][\w&.''/-]*(?:\s+[A-Z0-9][\w&.''/-]*){0,8}\s+(?:Sdn\.?\s*Bhd\.?|Berhad|Bhd\.?|Enterprise|Trading|Construction|Engineering))(?!\w)'
+        score: 0.5
+    supported_languages:
+      - language: en
+        context: [customer, client, contractor, vendor, subcontractor, company, supplier]
+    enabled: true
+  - name: MalaysianNameTitleRecognizer
+    type: custom
+    supported_entity: MALAYSIAN_PERSON
+    patterns:
+      - name: name with title
+        regex: '\b(?:Encik|Puan|Tuan|Haji|Hajah|Hjh|Dato''?|Datin|Datuk|Tan\s+Sri|Ir|Sr|Ar|Dr|Mr|Mrs|Ms|Miss|Ts)\.?\s+[A-Z][a-zA-Z.''-]*(?:\s+(?:bin|binti|bte|a/l|a/p|s/o|d/o)\s+[A-Z][a-zA-Z.''-]*)?(?:\s+[A-Z][a-zA-Z.''-]*){0,3}'
+        score: 0.7
+    supported_languages:
+      - language: en
+        context: [name, signed, signature, witness, designation, attention, director, manager, engineer]
+    enabled: true
+  - name: MalaysianNameRecognizer
+    type: custom
+    supported_entity: MALAYSIAN_PERSON
+    patterns:
+      - name: malay patronymic
+        regex: '\b[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*){0,2}\s+(?:bin|binti|bte|bt\.|b\.)\s+[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*){0,2}'
+        score: 0.9
+      - name: indian patronymic
+        regex: '\b[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*){0,2}\s+(?:s/o|d/o|a/l|a/p)\s+[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*){0,2}'
+        score: 0.9
+      - name: sikh given plus singh kaur
+        regex: '\b[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*){0,2}\s+(?:Singh|Kaur)\b'
+        score: 0.8
+      - name: chinese surname first
+        regex: '\b(?:Tan|Lim|Lee|Ng|Ong|Wong|Goh|Chan|Koh|Cheong|Teh|Yeoh|Yap|Low|Foo|Chua|Ho|Sim|Teo|Khoo|Lau|Yeo|Chang|Chong|Chin|Fong|Lam|Lo|Lok|Lye|Mak|Ngai|Pang|Poh|Seah|Soh|Tai|Tang|Tay|Teng|Thi|Wan|Yong|Yuen|Chew|Foong|Chow)\s+[A-Z][a-zA-Z.''-]*\s+[A-Z][a-zA-Z.''-]*'
+        score: 0.55
+      - name: western first chinese surname
+        regex: '\b[A-Z][a-z]+\s+(?:Tan|Lim|Lee|Ng|Ong|Wong|Goh|Chan|Koh|Cheong|Teh|Yeoh|Yap|Low|Foo|Chua|Ho|Sim|Teo|Khoo|Lau|Yeo|Chang|Chong|Chin|Fong|Lam|Lo|Lok|Lye|Mak|Ngai|Pang|Poh|Seah|Soh|Tai|Tang|Tay|Teng|Thi|Wan|Yong|Yuen|Chew|Foong|Chow)\s+[A-Z][a-zA-Z.''-]*(?:\s+[A-Z][a-zA-Z.''-]*)?'
+        score: 0.5
+    supported_languages:
+      - language: en
+        context: [name, signed, signature, witness, designation, attention, son, daughter]
+    enabled: true
+  # NRIC and SSM number recognizers live in recognizers.py: their structural
+  # validation cannot be expressed as YAML patterns (see module header).
+  - name: MalaysianAddressRecognizer
+    type: custom
+    supported_entity: ADDRESS
+    patterns:
+      - name: street block with postcode
+        regex: '(?:No\.|Lot\.?|P\.T\.|Jalan|Jln\.?|Lebuh|Persiaran|Taman|Kampung|Kg\.|Seksyen|Presint)[\s\S]{0,200}?\b\d{5}\b\s+[A-Z][A-Za-z.-]*(?:\s+[A-Z][A-Za-z.-]*){0,3}'
+        score: 0.6
+      - name: po box with postcode
+        regex: '(?:P\.O\.\s*Box|Peti\s+Surat)\s*\d+[\s\S]{0,120}?\b\d{5}\b\s+[A-Z][A-Za-z.-]*(?:\s+[A-Z][A-Za-z.-]*){0,3}'
+        score: 0.7
+      - name: postcode town pair
+        regex: '\b\d{5}\s+[A-Z][A-Za-z.-]*(?:\s+[A-Z][A-Za-z.-]*){0,2}'
+        score: 0.55
+    supported_languages:
+      - language: en
+        context: [address, jalan, taman, postcode, poskod, kampung, lorong]
+    enabled: true
+  - name: ApiKeyRecognizer
+    type: custom
+    supported_entity: API_KEY
+    patterns:
+      - name: api key
+        regex: 'sk-[A-Za-z0-9]{16,}'
+        score: 0.9
+    supported_languages:
+      - language: en
+    enabled: true
+  - name: MalaysianPhoneRecognizer
+    type: custom
+    supported_entity: PHONE_NUMBER
+    patterns:
+      - name: mobile 011 015
+        regex: '(?:\+?60|0)1[15][\s-]?\d{4}[\s-]?\d{4}'
+        score: 0.85
+      - name: mobile others
+        regex: '(?:\+?60|0)1[02346789][\s-]?\d{3}[\s-]?\d{4}'
+        score: 0.85
+      - name: landline klang valley
+        regex: '(?:\+?60|0)3[\s-]?\d{4}[\s-]?\d{4}'
+        score: 0.8
+      - name: landline peninsular
+        regex: '(?:\+?60|0)[4-79][\s-]?\d{3}[\s-]?\d{4}'
+        score: 0.8
+      - name: landline east malaysia
+        regex: '(?:\+?60|0)8\d[\s-]?\d{3}[\s-]?\d{3}'
+        score: 0.8
+      - name: toll free
+        regex: '(?:\+?60|0)?1[\s-]?800[\s-]?\d{3}[\s-]?\d{3}'
+        score: 0.9
+    supported_languages:
+      - language: en
+    enabled: true

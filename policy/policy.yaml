@@ -5,6 +5,8 @@ entities:
     action: pseudonymize
   EMAIL_ADDRESS:
     action: pseudonymize
+  URL:
+    action: pseudonymize
   PHONE_NUMBER:
     action: pseudonymize
   ORGANIZATION:
@@ -20,4 +22,6 @@ entities:
   SSM:
     action: pseudonymize
   NRIC:
+    action: pseudonymize
+  TAX_ID:
     action: pseudonymize

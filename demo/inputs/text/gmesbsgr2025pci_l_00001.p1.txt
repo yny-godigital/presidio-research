@@ -1,0 +1,46 @@
+& GAMUDA
+Our Ref : GMESB/SgR/2025/PCI-L-00001
+Date : 1 December 2025
+PRO CAHAYA INDUSTRIES SDN BHD (Company No.: 553358-M)
+No. 43, Jalan Kota Raja F27/F,
+Hicom Town Centre, Seksyen 27,
+40400 Shah Alam,
+Selangor, Malaysia.
+Attn : Mr. Edmund Chow
+Dear Sir,
+PROPOSED DEVELOPMENT OF SG. RASAU WATER SUPPLY SCHEME (STAGE
+1), SELANGOR DARUL EHSAN
+PACKAGE 1 — DESIGN AND BUILD OF PROPOSED RASAU INTAKE, RAW
+WATER PUMPING MAINS, WATER TREATMENT PLANT AND ASSOCIATED
+WORKS
+SUB CONTRACT WORK: FOR DESIGN REVIEW, SUPPLY, DELIVERY,
+INSTALLATION, TESTING & COMMISSIONING AND MAINTENANCE OF SCADA &
+INSTRUMENTATION SYSTEM FOR SG. RASAU (STAGE 1)
+Subject: Notification of Delay No. 1 - SCADA System
+Your Letter Reference: PCI/GMESB/SgR/2025/LET/002 dated 20 November 2025
+We refer to your notification regarding the alleged delay arising from the outstanding
+confirmation on the Material Specification (MSA) for the PLC and SCADA software brand.
+After due review, our responses are stated below for your strict compliance:
+1. Outstanding Confirmation on Material Specification (MSA) — PLC and SCADA
+Software
+GME wish to reiterate that Material Specification (MSA) — PLC and SCADA Software
+are yet to be approved by AiS and in the interim, PCI to proceed with the preparation
+of relevant documents while waiting for the approval of the said document. Also this
+has been recorded in Scada meeting no 4 Item 3.2 held on 15 July 2025, which clearly
+states “to prepare draft”. Once official AiS approval is obtained target by end December
+2025, it will be submitted in ACC officially for review circulation.
+2. Impact on Program and Deliverables
+PCI is required to submit a detailed manpower deployment plan and a revised activity
+programme demonstrating how the contractual completion date of 30 June 2027 will
+be achieved. The submission shall clearly identify mitigation measures and work
+sequencing to avoid any delay to the overall project timeline. For the record, with
+reference to Item 1 above, the timeline has not lapsed.
+3. Contractual Position
+For avoidance of doubt, the contractual completion date remains 30 June 2027. GME
+does not accept any assertion that the above matter constitutes grounds for an Extension
+of Time (EOT). Accordingly, no EOT claim arising from this issue will be entertained.
+e 4 Gamuda M&E Sdn Bhd (1102650-A) Formerly known as Semarak Kuasa Sdn Bhd 2
+Registered Address | Menara Gamuda, Block D, PJ Trade Centre, No. 8, Jalan PJU 8/8A, Bandar Damansara Perdana, 47820, Petaling Jaya, Selangor.
+T 1 +603 7494 8288 F 1 +603 7728 9811 W | www.gamuda.com.my
+Business Address | No. 52 - 58, Jalan $S22/21, Damansara Jaya, 47400 Petaling Jaya, Selangor
+T | +603 7731 3296 F | +603 7731 6879

@@ -41,7 +41,7 @@ PRIORITY = (
 
 #: Contained spans of these types survive alongside their container.
 ID_TYPES = frozenset(
-    {"NRIC", "SSM", "API_KEY", "PROJECT_CODE", "PHONE_NUMBER", "EMAIL_ADDRESS"}
+    {"NRIC", "SSM", "API_KEY", "PROJECT_CODE", "PHONE_NUMBER", "EMAIL_ADDRESS", "TAX_ID"}
 )
 
 

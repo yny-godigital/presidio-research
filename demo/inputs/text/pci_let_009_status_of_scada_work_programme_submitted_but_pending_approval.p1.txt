@@ -1,0 +1,48 @@
+PRO CAHAYA INDUSTRIES SDN BHD (200101017601 (553358-M)) | No. 43, Jalan Kota Raja F27/F, Hicom
+Town Centre, Seksyen 27, 40400 Shah Alam, Selangor, Malaysia.
+T: +60 3 5191 8113 | F: +60 3 5191 7113 | customercare@pcgroup.my | www.pcgroup.my
+Our Ref.
+: PCI/GMESB/SgR/2026/LET/009
+Date
+: 7th August 2026
+GAMUDA M&E Sdn. Bhd.
+No. 52, 58, Jalan SS22/21,
+Damansara Jaya,
+47400 Petaling Jaya,
+Selangor Darul Ehsan
+Attn: Ms. Sharifah Munirah Bt Syed Kamarulzaman / Mr. Kelvin Au Yong / Mr. Steven Lo
+Dear Sir/Madam,
+PROPOSED DEVELOPMENT OF SG. RASAU WATER SUPPLY SCHEME (STAGE 1), SELANGOR DARUL EHSAN.
+PACKAGE 1 – DESIGN AND BUILD OF PROPOSED RASAU INTAKE, RAW WATER PUMPING MAINS, WATER
+TREATMENT PLANT AND ASSOCIATED WORKS
+SUBCONTRACT WORK – FOR DESIGN REVIEW, SUPPLY, DELIVERY, INSTALLATION, TESTING & COMMISSIONING
+AND MAINTENANCE OF SCADA & INSTRUMENTATION SYSTEM FOR SG. RASAU (STAGE 1)
+Subject: STATUS OF SCADA WORK PROGRAMME – SUBMITTED BUT PENDING APPROVAL
+We refer to the above matter and wish to formally inform GAMUDA M&E Sdn. Bhd. (“GME”) that the SCADA
+Work Programme has been submitted by Pro Cahaya Industries Sdn. Bhd. (“PCI”) to GME on multiple
+occasions since August 2025, and, as of the date of this letter, remains pending GME's formal approval /
+baselining.
+1. Purpose
+PCI writes to place on record that the SCADA Work Programme has been submitted to GME on six (6) separate
+occasions since August 2025, and that as at the date of this letter GME has neither approved nor baselined
+any version of it, nor rejected any version with reasons. PCI seeks GME’s approval and baselining of the current
+programme (Rev04A) so both parties may proceed against an agreed baseline.
+2. Summary of Chronology
+No.
+Date
+Event / Description
+Direction
+1
+04 Aug 2025
+PCI submits draft SCADA Work Programme.
+PCI → GME
+2
+22 Aug 2025
+PCI submits Advance Work Programme (S1A).
+PCI → GME
+3
+26 Nov 2025
+GME sends its own Contractor's Programme (REV.02B) via
+WhatsApp only — no formal transmittal, and WhatsApp is not
+a valid notice method under Clause 48.1.
+GME → PCI

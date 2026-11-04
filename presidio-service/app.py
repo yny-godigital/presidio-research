@@ -264,3 +264,9 @@ def restore(body: dict):
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return {"text": restored}
+
+@app.post("/reload")
+def reload():
+    global ENGINE
+    ENGINE = build_engine()
+    return {"status": "reloaded"}

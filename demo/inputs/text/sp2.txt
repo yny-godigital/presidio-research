@@ -1,0 +1,115 @@
+Snippet 1
+PRO CAHAYA INDUSTRIES SDN BHD (200101017601 (553358-M)) | No. 43, Jalan Kota Raja F27/F, Hicom
+Town Centre, Seksyen 27, 40400 Shah Alam, Selangor, Malaysia.
+T: +60 3 5191 8113 | F: +60 3 5191 7113 | customercare@pcgroup.my | www.pcgroup.my
+No.
+Date
+Event / Description
+Direction
+4
+01 Dec 2025
+GME issues Notification of Delay No.1; states the approved
+Work Program “will be furnished in due course.”
+
+Snippet 2
+GME issues Notification of Delay No.1; states the approved
+Work Program “will be furnished in due course.”
+GME → PCI
+5
+18 Dec 2025
+PCI submits Rev03, aligned to REV.02B as best possible despite
+it never being formally issued.
+PCI → GME
+6
+19 Mar 2026
+GME asks PCI to revise the SCADA Software Programme dates
+(not a formal rejection with reasons).
+GME → PCI
+7
+30 Mar 2026
+
+Snippet 3
+GME asks PCI to revise the SCADA Software Programme dates
+(not a formal rejection with reasons).
+PCI resubmits the revised Software Programme within 11 days. PCI → GME
+8
+21 Apr 2026
+GME asks for a consolidated “Overall SCADA Work Programme”
+with full breakdown.
+GME → PCI
+For ease of reference, the work programme submissions and their current approval status are summarised
+below:
+No.
+Work Programme Document
+
+Snippet 4
+For ease of reference, the work programme submissions and their current approval status are summarised
+below:
+No.
+Work Programme Document
+Date
+of
+Submission
+Approval Status (to date)
+1
+Draft SCADA Package Work Programme (Phase
+1) – Primavera P6
+04 Aug 2025
+No approval and no rejection
+with reasons received
+2
+Draft
+SCADA
+Package
+Advance
+Work
+Programme (S1A) – REV00 (Full)
+22 Aug 2025
+
+Snippet 5
+Draft
+SCADA
+Package
+Advance
+Work
+Programme (S1A) – REV00 (Full)
+22 Aug 2025
+No approval and no rejection
+with reasons received
+3
+Sg. Rasau Water Treatment Plant Work
+Program Rev03 (Full)
+18 Dec 2025
+No approval and no rejection
+with reasons received
+4
+Revised SCADA Software Work Programme
+(20260324_PCI.xlsx)
+30 Mar 2026
+No approval and no rejection
+with reasons received
+5
+Draft Overall SCADA Work Programme (with
+
+Snippet 6
+with reasons received
+5
+Draft Overall SCADA Work Programme (with
+breakdown)
+27 Apr 2026
+No approval and no rejection
+with reasons received
+6
+Sg Rasau Water Treatment Plant Work Program
+Rev04A_20260630
+30 Jun 2026
+No approval and no rejection
+with reasons received
+3. Current Status
+Four hundred and two (402) days have elapsed since the Notice to Proceed of 1 July 2025; 
+
+Snippet 7
+3. Current Status
+Four hundred and two (402) days have elapsed since the Notice to Proceed of 1 July 2025; 
+three hundred and
+twenty-seven (327) days remain to the contractual completion date of 30 June 2027. The absence of an

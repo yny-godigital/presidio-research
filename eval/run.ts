@@ -41,7 +41,7 @@ export type ScoredFile = {
   presidioArtifactPages: string[];
   rawNlpPages: string[];
 };
-
+const ANALYZER_URL = process.env.PRESIDIO_ANALYZER_URL || "http://127.0.0.1:3000";
 //---normalize then compare pdf and label, throwing errors when a pair is missing a part 
 //stems are file name without the extension, lowercased with single underscores.
 export function checkPairing(pdfs: string[], labelFiles: string[]): string[] {
@@ -144,8 +144,17 @@ export function excerpt(text: string, limit = 200): string {
   return flat.length > limit ? `${flat.slice(0, limit)}...` : flat;
 }
 
+async function syncAndReloadAnalyzer(): Promise<void> {
+  const response = await fetch(`${ANALYZER_URL}/reload`, { method: "POST" });
+  if (!response.ok) {
+    throw new Error(`Failed to reload analyzer: ${response.status} ${response.statusText}`);
+  }
+}
+
 //---main orchestrator of the process
 async function main(): Promise<void> {
+  await syncAndReloadAnalyzer();
+  
   // 0. available commands
   const inputsDir = parseArg("inputs", "demo/inputs");
   const labelsDir = parseArg("labels", "demo/inputs/labels");

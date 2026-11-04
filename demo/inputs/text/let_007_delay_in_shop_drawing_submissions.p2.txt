@@ -1,0 +1,23 @@
+PC GROUP MY
+PRO CAHAYA INDUSTRIES SDN BHD (200101017601 (553358-M))
+No. 43, Jalan Kota Raja F27/F, Hicom Town Centre, Seksyen 27, 40400 Shah Alam, Selangor, Malaysia.
+T: +60 3 5191 8113 | F: +60 3 5191 7113 | customercare@pcgroup.my | www.pcgroup.my
+Sales Tax No. B16-1808-220000468 Service Tax No. B16-1808-31015134
+2. Uncoordinated BIM Models
+While a BIM model has been received for the Raw Water Pumping Station, it is currently
+insufficient for production purposes. The model lacks necessary input and information from
+other M&E trades and is not properly coordinated. Due to this lack of coordination, we cannot
+identify or finalize equipment locations for the SCADA package, which has halted the
+preparation of BIM and shop drawings for this area.
+3. Progress Update
+For the areas where sufficient information was available—specifically Stream A Buildings,
+CSS Building, and MSS Building—we have successfully submitted the BIM modelling and
+shop drawings concurrently.
+We request that you provide the outstanding BIM models and ensure that the Raw Water
+Pumping Station model is fully coordinated with all M&E trades. Please advise on the expected
+timeline for the release of this information so we may update our submission schedule
+accordingly.
+Yours faithfully,
+__________________
+Edmund Chow
+Project Manager
