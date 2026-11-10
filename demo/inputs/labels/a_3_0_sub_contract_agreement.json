@@ -1,0 +1,125 @@
+{
+  "source": "A-3.0 - Sub-Contract Agreement.pdf",
+  "extractor": "pymupdf-1.28.2+ocr",
+  "entities": [
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 1,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN BHD",
+      "page": 1,
+      "start": 400,
+      "end": 418
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PENGURUSAN AIR SELANGOR SDN BHD",
+      "page": 1,
+      "start": 1061,
+      "end": 1092
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1156,
+      "end": 1178
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA BERHAD",
+      "page": 1,
+      "start": 1346,
+      "end": 1359
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1472,
+      "end": 1494
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA ENGINEERING SDN BHD",
+      "page": 1,
+      "start": 1685,
+      "end": 1711
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda Berhad",
+      "page": 1,
+      "start": 1769,
+      "end": 1782
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 1,
+      "start": 1849,
+      "end": 1871
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN. BHD.",
+      "page": 1,
+      "start": 2062,
+      "end": 2082
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 1,
+      "start": 2619,
+      "end": 2636
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 2,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 2,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Water Supply",
+      "page": 3,
+      "start": 24,
+      "end": 46
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "Sg. Rasau Project",
+      "page": 3,
+      "start": 259,
+      "end": 276
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN BHD",
+      "page": 3,
+      "start": 435,
+      "end": 453
+    }
+  ]
+}

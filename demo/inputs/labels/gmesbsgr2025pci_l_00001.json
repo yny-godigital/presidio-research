@@ -1,0 +1,146 @@
+{
+  "source": "GMESBSgR2025PCI-L-00001.pdf",
+  "extractor": "pymupdf-1.28.2+ocr",
+  "entities": [
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA",
+      "page": 1,
+      "start": 2,
+      "end": 8
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PRO CAHAYA INDUSTRIES SDN BHD",
+      "page": 1,
+      "start": 69,
+      "end": 98
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "SG. RASAU WATER SUPPLY",
+      "page": 1,
+      "start": 279,
+      "end": 301
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "SG. RASAU",
+      "page": 1,
+      "start": 612,
+      "end": 621
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GME",
+      "page": 1,
+      "start": 1093,
+      "end": 1096
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "AiS",
+      "page": 1,
+      "start": 1200,
+      "end": 1203
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 1224,
+      "end": 1227
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "AiS",
+      "page": 1,
+      "start": 1471,
+      "end": 1474
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 1626,
+      "end": 1629
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GME",
+      "page": 1,
+      "start": 2114,
+      "end": 2117
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda M&E Sdn Bhd",
+      "page": 1,
+      "start": 2297,
+      "end": 2315
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Semarak Kuasa Sdn Bhd",
+      "page": 1,
+      "start": 2346,
+      "end": 2367
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA",
+      "page": 2,
+      "start": 2,
+      "end": 8
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 2,
+      "start": 47,
+      "end": 50
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 2,
+      "start": 316,
+      "end": 319
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 2,
+      "start": 416,
+      "end": 419
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E SDN BHD",
+      "page": 2,
+      "start": 556,
+      "end": 574
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda M&E",
+      "page": 2,
+      "start": 690,
+      "end": 700
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda M&E Sdn Bhd",
+      "page": 2,
+      "start": 733,
+      "end": 751
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Semarak Kuasa Sdn Bhd",
+      "page": 2,
+      "start": 782,
+      "end": 803
+    }
+  ]
+}

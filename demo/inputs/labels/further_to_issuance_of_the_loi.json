@@ -1,0 +1,97 @@
+{
+  "source": "Further to issuance of the LOI.pdf",
+  "extractor": "pymupdf-1.28.2+ocr",
+  "entities": [
+    {
+      "type": "ORGANIZATION",
+      "value": "Gamuda M&E Sdn. Bdn.",
+      "page": 1,
+      "start": 32,
+      "end": 52
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GME",
+      "page": 1,
+      "start": 54,
+      "end": 57
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "Pro-Cahaya Industries\nSdn. Bhd.",
+      "page": 1,
+      "start": 63,
+      "end": 94
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 96,
+      "end": 99
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 343,
+      "end": 346
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 596,
+      "end": 599
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 604,
+      "end": 607
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 954,
+      "end": 957
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 1197,
+      "end": 1200
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 1380,
+      "end": 1383
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 1550,
+      "end": 1553
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GME",
+      "page": 1,
+      "start": 1729,
+      "end": 1732
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PCI",
+      "page": 1,
+      "start": 2142,
+      "end": 2145
+    }
+  ]
+}

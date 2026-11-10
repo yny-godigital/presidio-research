@@ -1,0 +1,41 @@
+{
+  "source": "LET-007 Delay in Shop Drawing Submissions.pdf",
+  "extractor": "pymupdf-1.28.2+ocr",
+  "entities": [
+    {
+      "type": "ORGANIZATION",
+      "value": "PRO CAHAYA INDUSTRIES SDN BHD",
+      "page": 1,
+      "start": 12,
+      "end": 41
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "GAMUDA M&E Sdn. Bhd.",
+      "page": 1,
+      "start": 373,
+      "end": 393
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "SG. RASAU WATER SUPPLY",
+      "page": 1,
+      "start": 553,
+      "end": 575
+    },
+    {
+      "type": "PROJECT_NAME",
+      "value": "SG. RASAU",
+      "page": 1,
+      "start": 886,
+      "end": 895
+    },
+    {
+      "type": "ORGANIZATION",
+      "value": "PRO CAHAYA INDUSTRIES SDN BHD",
+      "page": 2,
+      "start": 12,
+      "end": 41
+    }
+  ]
+}

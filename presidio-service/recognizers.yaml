@@ -5,17 +5,17 @@ recognizers:
   supported_language: en
   supported_entity: ORGANIZATION
   patterns:
+  - name: gamuda_m_e
+    regex: \bGAMUDA[-.\s]+M[-.\s]+E\b
+    score: 0.85
+  - name: pro_cahaya_industries
+    regex: \bPro[-.\s]+Cahaya[-.\s]+Industries\b
+    score: 0.85
   - name: gamuda_engineering
     regex: \bgamuda[-.\s]+engineering\b
     score: 0.85
-  - name: gamuda_m_e
-    regex: \bgamuda[-.\s]+m[-.\s]+e\b
-    score: 0.85
   - name: pengurusan_air_selangor
     regex: \bpengurusan[-.\s]+air[-.\s]+selangor\b
-    score: 0.85
-  - name: pro_cahaya_industries
-    regex: \bpro[-.\s]+cahaya[-.\s]+industries\b
     score: 0.85
   - name: semarak_kuasa
     regex: \bsemarak[-.\s]+kuasa\b
@@ -24,15 +24,15 @@ recognizers:
   supported_language: en
   supported_entity: PROJECT_NAME
   patterns:
-  - name: sg_rasau
-    regex: \bsg[-.\s]+rasau\b
+  - name: sungai_rasau_water_supply
+    regex: \bSUNGAI[-.\s]+RASAU[-.\s]+WATER[-.\s]+SUPPLY\b
     score: 0.85
-  - name: sg_rasau_project
-    regex: \bsg[-.\s]+rasau[-.\s]+project\b
+  - name: sungai_rasau
+    regex: \bSungai[-.\s]+Rasau\b
     score: 0.85
-  - name: sg_rasau_water_supply
-    regex: \bsg[-.\s]+rasau[-.\s]+water[-.\s]+supply\b
+  - name: sungai_rasau_water_treatment_plant
+    regex: \bSungai[-.\s]+Rasau[-.\s]+Water[-.\s]+Treatment[-.\s]+Plant\b
     score: 0.85
-  - name: sg_rasau_water_treatment_plant
-    regex: \bsg[-.\s]+rasau[-.\s]+water[-.\s]+treatment[-.\s]+plant\b
+  - name: sungai_rasau_project
+    regex: \bsungai[-.\s]+rasau[-.\s]+project\b
     score: 0.85
