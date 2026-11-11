@@ -11,6 +11,7 @@ from recognizers import (
     MalaysianSsmRecognizer,
 )
 from abbreviate import compile_and_split
+from alias_evaluator import run_alias_discovery
 
 DEFAULT_REGISTRY_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "recognizers.yaml"
@@ -19,18 +20,23 @@ DEFAULT_GAZETTEER_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "gazetteer.yaml"
 )
 
+DEFAULT_TEXT_DIR = os.getenv("DEMO_TEXT_DIR", "demo/inputs/text")
 
 def registry_file_from_env(env) -> str:
     return env.get("RECOGNIZER_REGISTRY_CONF_FILE", DEFAULT_REGISTRY_FILE)
 
 
 def build_registry(
-    conf_file: str = DEFAULT_REGISTRY_FILE, gazetteer_file: str = DEFAULT_GAZETTEER_FILE
+    conf_file: str = DEFAULT_REGISTRY_FILE, gazetteer_file: str = DEFAULT_GAZETTEER_FILE, text_dir: str = DEFAULT_TEXT_DIR
 ):
     for path in (conf_file, gazetteer_file):
         if not os.path.isfile(path):
             raise FileNotFoundError(f"Recognizer config not found: {path}")
-
+    # Call LLM to find aliases
+    run_alias_discovery(
+        gazetteer_path=Path(gazetteer_file),
+        text_dir=Path(text_dir),
+    )
     # Auto-compile and synchronize both YAML files on boot
     compile_and_split(Path(gazetteer_file), Path(conf_file))
 

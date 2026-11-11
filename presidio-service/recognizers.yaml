@@ -5,17 +5,23 @@ recognizers:
   supported_language: en
   supported_entity: ORGANIZATION
   patterns:
+  - name: gamuda_engineering
+    regex: \bgamuda[-.\s]+engineering\b
+    score: 0.85
   - name: gamuda_m_e
     regex: \bGAMUDA[-.\s]+M[-.\s]+E\b
+    score: 0.85
+  - name: gamuda_m_e
+    regex: \bGAMUDA[-.\s]+M[-.\s]+E\b
+    score: 0.85
+  - name: pengurusan_air_selangor
+    regex: \bpengurusan[-.\s]+air[-.\s]+selangor\b
     score: 0.85
   - name: pro_cahaya_industries
     regex: \bPro[-.\s]+Cahaya[-.\s]+Industries\b
     score: 0.85
-  - name: gamuda_engineering
-    regex: \bgamuda[-.\s]+engineering\b
-    score: 0.85
-  - name: pengurusan_air_selangor
-    regex: \bpengurusan[-.\s]+air[-.\s]+selangor\b
+  - name: pro_cahaya_industries
+    regex: \bPRO[-.\s]+CAHAYA[-.\s]+INDUSTRIES\b
     score: 0.85
   - name: semarak_kuasa
     regex: \bsemarak[-.\s]+kuasa\b
@@ -24,15 +30,39 @@ recognizers:
   supported_language: en
   supported_entity: PROJECT_NAME
   patterns:
-  - name: sungai_rasau_water_supply
-    regex: \bSUNGAI[-.\s]+RASAU[-.\s]+WATER[-.\s]+SUPPLY\b
+  - name: rasau_intake_raw_water_pumping_mains_water_treatment_plant
+    regex: \bRASAU[-.\s]+INTAKE[-.\s]+RAW[-.\s]+WATER[-.\s]+PUMPING[-.\s]+MAINS[-.\s]+WATER[-.\s]+TREATMENT[-.\s]+PLANT\b
+    score: 0.85
+  - name: scada_software_programme
+    regex: \bSCADA[-.\s]+Software[-.\s]+Programme\b
+    score: 0.85
+  - name: scada_work_programme
+    regex: \bSCADA[-.\s]+Work[-.\s]+Programme\b
+    score: 0.85
+  - name: sg_rasau
+    regex: \bSg[-.\s]+Rasau\b
+    score: 0.85
+  - name: sg_rasau_water_treatment_plant
+    regex: \bSg[-.\s]+Rasau[-.\s]+Water[-.\s]+Treatment[-.\s]+Plant\b
+    score: 0.85
+  - name: sg_rasau
+    regex: \bSG[-.\s]+RASAU\b
+    score: 0.85
+  - name: sg_rasau_water_supply
+    regex: \bSG[-.\s]+RASAU[-.\s]+WATER[-.\s]+SUPPLY\b
+    score: 0.85
+  - name: sg_rasau_water_treatment_plant
+    regex: \bSg[-.\s]+Rasau[-.\s]+Water[-.\s]+Treatment[-.\s]+Plant\b
     score: 0.85
   - name: sungai_rasau
     regex: \bSungai[-.\s]+Rasau\b
     score: 0.85
-  - name: sungai_rasau_water_treatment_plant
-    regex: \bSungai[-.\s]+Rasau[-.\s]+Water[-.\s]+Treatment[-.\s]+Plant\b
-    score: 0.85
   - name: sungai_rasau_project
     regex: \bsungai[-.\s]+rasau[-.\s]+project\b
+    score: 0.85
+  - name: sungai_rasau_water_supply
+    regex: \bSUNGAI[-.\s]+RASAU[-.\s]+WATER[-.\s]+SUPPLY\b
+    score: 0.85
+  - name: sungai_rasau_water_treatment_plant
+    regex: \bSungai[-.\s]+Rasau[-.\s]+Water[-.\s]+Treatment[-.\s]+Plant\b
     score: 0.85

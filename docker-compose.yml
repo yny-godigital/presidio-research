@@ -5,15 +5,26 @@ services:
       dockerfile: presidio-service/Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - LLM_API_URL=http://host.docker.internal:1234/v1/chat/completions
+      - DEMO_TEXT_DIR=/app/demo/inputs/text
+      - EVAL_RESULTS_DIR=/app/eval/results
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./presidio-service:/app
       - /app/.venv
       - ./policy/policy.yaml:/app/policy.yaml
+      # Mount input document text so the container can read .p{n}.txt files
+      - ./demo/inputs/text:/app/demo/inputs/text
+      # Mount results folder so <stem>.llm_discovery.txt writes to your host
+      - ./eval/results:/app/eval/results
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:3000/health | grep -q up"]
       interval: 10s
       timeout: 5s
       retries: 30
+      start_period: 60s
       
   eval-runner:
     build:

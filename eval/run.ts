@@ -153,7 +153,7 @@ async function syncAndReloadAnalyzer(): Promise<void> {
 
 //---main orchestrator of the process
 async function main(): Promise<void> {
-  await syncAndReloadAnalyzer();
+  // await syncAndReloadAnalyzer();
   
   // 0. available commands
   const inputsDir = parseArg("inputs", "demo/inputs");
